@@ -1,0 +1,30 @@
+{
+  "name": "samvid-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Samvid Employee & Project Management System",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "uuid": "^9.0.1"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "management",
+    "employees",
+    "projects"
+  ],
+  "author": "Samvid Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

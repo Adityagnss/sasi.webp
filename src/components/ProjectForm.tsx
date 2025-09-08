@@ -9,6 +9,8 @@ import { CalendarIcon, Briefcase, DollarSign, Clock, Hash } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { projectsApi } from '@/services/api';
+import { useMutation } from '@/hooks/useApi';
 
 export interface Project {
   id: string;
@@ -34,6 +36,35 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ projects, onAddProject
   const [startDate, setStartDate] = useState<Date>();
   const { toast } = useToast();
 
+  // API mutation for creating projects
+  const { mutate: createProject, loading: isCreating } = useMutation(
+    projectsApi.create,
+    (newProject) => {
+      onAddProject(newProject);
+      // Reset form
+      setFormData({
+        projectNumber: '',
+        projectName: '',
+        budget: '',
+        manHours: '',
+      });
+      setStartDate(undefined);
+      
+      toast({
+        title: "🎉 Success!",
+        description: "Project has been saved to the database",
+        className: "border-l-4 border-l-primary",
+      });
+    },
+    (error) => {
+      toast({
+        title: "Error",
+        description: error || "Failed to save project",
+        variant: "destructive",
+      });
+    }
+  );
+
   // Input validation functions
   const handleNumberInput = (value: string, field: string) => {
     const numericValue = value.replace(/[^0-9]/g, '');
@@ -56,8 +87,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ projects, onAddProject
       return;
     }
 
-    const newProject: Project = {
-      id: Date.now().toString(),
+    const projectData = {
       projectNumber: formData.projectNumber,
       projectName: formData.projectName,
       budget: formData.budget,
@@ -65,22 +95,7 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ projects, onAddProject
       startDate,
     };
 
-    onAddProject(newProject);
-    
-    // Reset form
-    setFormData({
-      projectNumber: '',
-      projectName: '',
-      budget: '',
-      manHours: '',
-    });
-    setStartDate(undefined);
-
-    toast({
-      title: "🎉 Success!",
-      description: "Project has been added successfully",
-      className: "border-l-4 border-l-primary",
-    });
+    createProject(projectData);
   };
 
   return (
@@ -192,9 +207,10 @@ export const ProjectForm: React.FC<ProjectFormProps> = ({ projects, onAddProject
           <Button 
             type="submit" 
             className="w-full h-14 bg-gradient-primary hover:shadow-glow btn-bounce text-lg font-semibold"
+            disabled={isCreating}
           >
             <Briefcase className="mr-3 h-5 w-5" />
-            Save Project
+            {isCreating ? 'Saving...' : 'Save Project'}
           </Button>
         </form>
 

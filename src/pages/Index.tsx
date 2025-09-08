@@ -4,22 +4,25 @@ import { EmployeeForm, Employee } from '@/components/EmployeeForm';
 import { AssignmentForm, Assignment } from '@/components/AssignmentForm';
 import { CheckCircle, Circle, ArrowRight, Sparkles, Users, Briefcase, Target } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useApi } from '@/hooks/useApi';
+import { projectsApi, employeesApi, assignmentsApi } from '@/services/api';
 
 const Index = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  // Load data from backend
+  const { data: projects = [], refetch: refetchProjects } = useApi<Project[]>(projectsApi.getAll);
+  const { data: employees = [], refetch: refetchEmployees } = useApi<Employee[]>(employeesApi.getAll);
+  const { data: assignments = [], refetch: refetchAssignments } = useApi<Assignment[]>(assignmentsApi.getAll);
 
   const handleAddProject = (project: Project) => {
-    setProjects([...projects, project]);
+    refetchProjects();
   };
 
   const handleAddEmployee = (employee: Employee) => {
-    setEmployees([...employees, employee]);
+    refetchEmployees();
   };
 
   const handleAddAssignment = (assignment: Assignment) => {
-    setAssignments([...assignments, assignment]);
+    refetchAssignments();
   };
 
   // Progress indicators

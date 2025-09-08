@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Users, User, Badge, Hash, UserCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { employeesApi } from '@/services/api';
+import { useMutation } from '@/hooks/useApi';
 
 export interface Employee {
   id: string;
@@ -26,6 +28,33 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ employees, onAddEmpl
     designation: '',
   });
   const { toast } = useToast();
+
+  // API mutation for creating employees
+  const { mutate: createEmployee, loading: isCreating } = useMutation(
+    employeesApi.create,
+    (newEmployee) => {
+      onAddEmployee(newEmployee);
+      // Reset form
+      setFormData({
+        employeeNumber: '',
+        employeeName: '',
+        designation: '',
+      });
+      
+      toast({
+        title: "🎉 Success!",
+        description: "Employee has been saved to the database",
+        className: "border-l-4 border-l-secondary",
+      });
+    },
+    (error) => {
+      toast({
+        title: "Error",
+        description: error || "Failed to save employee",
+        variant: "destructive",
+      });
+    }
+  );
 
   // Input validation functions
   const handleNumberInput = (value: string) => {
@@ -49,27 +78,13 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ employees, onAddEmpl
       return;
     }
 
-    const newEmployee: Employee = {
-      id: Date.now().toString(),
+    const employeeData = {
       employeeNumber: formData.employeeNumber,
       employeeName: formData.employeeName,
       designation: formData.designation,
     };
 
-    onAddEmployee(newEmployee);
-    
-    // Reset form
-    setFormData({
-      employeeNumber: '',
-      employeeName: '',
-      designation: '',
-    });
-
-    toast({
-      title: "🎉 Success!",
-      description: "Employee has been added successfully",
-      className: "border-l-4 border-l-secondary",
-    });
+    createEmployee(employeeData);
   };
 
   return (
@@ -136,9 +151,10 @@ export const EmployeeForm: React.FC<EmployeeFormProps> = ({ employees, onAddEmpl
           <Button 
             type="submit" 
             className="w-full h-14 bg-gradient-secondary hover:shadow-glow btn-bounce text-lg font-semibold"
+            disabled={isCreating}
           >
             <UserCheck className="mr-3 h-5 w-5" />
-            Save Employee
+            {isCreating ? 'Saving...' : 'Save Employee'}
           </Button>
         </form>
 

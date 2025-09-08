@@ -11,6 +11,8 @@ import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { Project } from './ProjectForm';
 import { Employee } from './EmployeeForm';
+import { assignmentsApi } from '@/services/api';
+import { useMutation } from '@/hooks/useApi';
 
 export interface Assignment {
   id: string;
@@ -50,6 +52,34 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
   const [endTime, setEndTime] = useState<string>('');
   const { toast } = useToast();
 
+  // API mutation for creating assignments
+  const { mutate: createAssignment, loading: isCreating } = useMutation(
+    assignmentsApi.create,
+    (newAssignment) => {
+      onAddAssignment(newAssignment);
+      // Reset form
+      setSelectedProjectId('');
+      setSelectedEmployeeId('');
+      setSelectedActivity('');
+      setSelectedDate(undefined);
+      setStartTime('');
+      setEndTime('');
+      
+      toast({
+        title: "🎉 Assignment Created!",
+        description: "Work has been assigned and saved to the database",
+        className: "border-l-4 border-l-accent",
+      });
+    },
+    (error) => {
+      toast({
+        title: "Error",
+        description: error || "Failed to create assignment",
+        variant: "destructive",
+      });
+    }
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProjectId || !selectedEmployeeId || !selectedActivity || !selectedDate || !startTime || !endTime) {
@@ -61,8 +91,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
       return;
     }
 
-    const newAssignment: Assignment = {
-      id: Date.now().toString(),
+    const assignmentData = {
       projectId: selectedProjectId,
       employeeId: selectedEmployeeId,
       activity: selectedActivity,
@@ -71,21 +100,7 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
       endTime,
     };
 
-    onAddAssignment(newAssignment);
-    
-    // Reset form
-    setSelectedProjectId('');
-    setSelectedEmployeeId('');
-    setSelectedActivity('');
-    setSelectedDate(undefined);
-    setStartTime('');
-    setEndTime('');
-
-    toast({
-      title: "🎉 Assignment Created!",
-      description: "Work has been assigned successfully",
-      className: "border-l-4 border-l-accent",
-    });
+    createAssignment(assignmentData);
   };
 
   const getProjectName = (projectId: string) => {
@@ -252,9 +267,10 @@ export const AssignmentForm: React.FC<AssignmentFormProps> = ({
           <Button 
             type="submit" 
             className="w-full h-14 bg-gradient-accent hover:shadow-glow btn-bounce text-lg font-semibold"
+            disabled={isCreating}
           >
             <CheckCircle className="mr-3 h-5 w-5" />
-            Create Assignment
+            {isCreating ? 'Creating...' : 'Create Assignment'}
           </Button>
         </form>
 
