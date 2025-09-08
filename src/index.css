@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 245 20% 97%;
+    --foreground: 224 15% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 224 15% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 15% 12%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 262 100% 75%;
+
+    --secondary: 197 71% 52%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 197 100% 70%;
+
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+
+    --accent: 142 69% 58%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 142 100% 75%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262 83% 58%;
+
+    --radius: 1rem;
+
+    /* Vibrant Professional gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--success)), hsl(142 70% 55%));
+    --gradient-warning: linear-gradient(135deg, hsl(var(--warning)), hsl(38 92% 65%));
+    --gradient-bg: linear-gradient(135deg, hsl(245 50% 96%), hsl(262 30% 94%), hsl(197 30% 96%));
+    --gradient-hero: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(197 71% 52%) 50%, hsl(142 69% 58%) 100%);
+    --gradient-card: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+    
+    /* Enhanced shadows */
+    --shadow-card: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --shadow-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 50px rgba(98, 0, 234, 0.15);
+    --shadow-colorful: 0 8px 32px rgba(98, 0, 234, 0.12), 0 4px 16px rgba(15, 185, 177, 0.08);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 224 20% 6%;
+    --foreground: 0 0% 98%;
+
+    --card: 224 15% 9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 224 15% 9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 262 100% 75%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 262 100% 85%;
+
+    --secondary: 197 100% 70%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 197 100% 80%;
+
+    --muted: 215 25% 15%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+
+    --accent: 142 100% 75%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 142 100% 85%;
+
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 25% 20%;
+    --input: 215 25% 20%;
+    --ring: 262 100% 75%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-gradient-bg text-foreground font-medium;
+  }
+
+  /* Beautiful input animations */
+  .input-glow:focus {
+    @apply ring-2 ring-primary/30 border-primary shadow-glow;
+  }
+
+  /* Hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-elevated hover:-translate-y-1;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-hero bg-clip-text text-transparent;
+  }
+
+  /* Button animations */
+  .btn-bounce {
+    @apply transition-all duration-300 active:scale-95 hover:scale-105;
+  }
+}
